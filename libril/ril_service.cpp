@@ -3867,12 +3867,12 @@ int radio::getDataRegistrationStateResponse(int slotId,
         populateResponseInfo(responseInfo, serial, responseType, e);
         DataRegStateResult dataRegResponse = {};
         if (response == NULL) {
-            RLOGE("getDataRegistrationStateResponse Invalid response: NULL");
+            RLOGE("getDataRegistrationStateResponse Invalid response: real NULL");
             if (e == RIL_E_SUCCESS) responseInfo.error = RadioError::INVALID_RESPONSE;
         } else if (s_vendorFunctions->version <= 14) {
             int numStrings = responseLen / sizeof(char *);
             if ((numStrings != 6) && (numStrings != 11)) {
-                RLOGE("getDataRegistrationStateResponse Invalid response: NULL");
+                RLOGE("getDataRegistrationStateResponse Invalid response: NULL (numstrings: %d)", numStrings);
                 if (e == RIL_E_SUCCESS) responseInfo.error = RadioError::INVALID_RESPONSE;
             } else {
                 char **resp = (char **) response;
@@ -3888,7 +3888,7 @@ int radio::getDataRegistrationStateResponse(int slotId,
                     (RIL_DataRegistrationStateResponse *)response;
 
             if (responseLen != sizeof(RIL_DataRegistrationStateResponse)) {
-                RLOGE("getDataRegistrationStateResponse Invalid response: NULL");
+                RLOGE("getDataRegistrationStateResponse Invalid response: NULL (length: %d != %d", responseLen, sizeof(RIL_DataRegistrationStateResponse));
                 if (e == RIL_E_SUCCESS) responseInfo.error = RadioError::INVALID_RESPONSE;
             } else {
                 dataRegResponse.regState = (RegState) dataRegState->regState;
@@ -7130,7 +7130,7 @@ int radio::currentSignalStrengthInd(int slotId,
     if (radioService[slotId] != NULL && radioService[slotId]->mRadioIndication != NULL) {
         if (response == NULL || (responseLen != sizeof(RIL_SignalStrength_v10)
                 && responseLen != sizeof(RIL_SignalStrength_v8))) {
-            RLOGE("currentSignalStrengthInd: invalid response");
+			RLOGE("currentSignalStrengthInd: invalid response, response len %d, should be %d or %d", responseLen, sizeof(RIL_SignalStrength_v8), sizeof(RIL_SignalStrength_v10));
             return 0;
         }
 
